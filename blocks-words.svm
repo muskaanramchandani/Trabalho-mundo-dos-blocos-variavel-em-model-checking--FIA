@@ -1,0 +1,269 @@
+MODULE main
+
+VAR
+  on_a : {table, b, c, d};
+  on_b : {table, a, c, d};
+  on_c : {table, a, b, d};
+  on_d : {table, a, b, c};
+  position_a : 0..6;
+  position_b : 0..6;
+  position_c : 0..6;
+  position_d : 0..6;
+  level_a : 0..10;
+  level_b : 0..10;
+  level_c : 0..10;
+  level_d : 0..10;
+  move : {none, 
+          move_a_to_table_0, move_a_to_table_1, move_a_to_table_2, move_a_to_table_3, move_a_to_table_4, move_a_to_table_5, move_a_to_table_6,
+          move_a_to_b, move_a_to_c, move_a_to_d,
+          move_b_to_table_0, move_b_to_table_1, move_b_to_table_2, move_b_to_table_3, move_b_to_table_4, move_b_to_table_5, move_b_to_table_6,
+          move_b_to_a, move_b_to_c, move_b_to_d,
+          move_c_to_table_0, move_c_to_table_1, move_c_to_table_2, move_c_to_table_3, move_c_to_table_4, move_c_to_table_5, move_c_to_table_6,
+          move_c_to_a, move_c_to_b, move_c_to_d,
+          move_d_to_table_0, move_d_to_table_1, move_d_to_table_2, move_d_to_table_3, move_d_to_table_4, move_d_to_table_5, move_d_to_table_6,
+          move_d_to_a, move_d_to_b, move_d_to_c};
+
+DEFINE
+  size_a := 1;
+  size_b := 1;
+  size_c := 1;
+  size_d := 2;
+  clear_a := (on_b != a) & (on_c != a) & (on_d != a);
+  clear_b := (on_a != b) & (on_c != b) & (on_d != b);
+  clear_c := (on_a != c) & (on_b != c) & (on_d != c);
+  clear_d := (on_a != d) & (on_b != d) & (on_c != d);
+  occupied_table_0 := (on_a = table & position_a <= 0 & 0 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 0 & 0 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 0 & 0 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 0 & 0 <= position_d + size_d - 1);
+  occupied_table_1 := (on_a = table & position_a <= 1 & 1 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 1 & 1 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 1 & 1 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 1 & 1 <= position_d + size_d - 1);
+  occupied_table_2 := (on_a = table & position_a <= 2 & 2 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 2 & 2 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 2 & 2 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 2 & 2 <= position_d + size_d - 1);
+  occupied_table_3 := (on_a = table & position_a <= 3 & 3 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 3 & 3 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 3 & 3 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 3 & 3 <= position_d + size_d - 1);
+  occupied_table_4 := (on_a = table & position_a <= 4 & 4 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 4 & 4 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 4 & 4 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 4 & 4 <= position_d + size_d - 1);
+  occupied_table_5 := (on_a = table & position_a <= 5 & 5 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 5 & 5 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 5 & 5 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 5 & 5 <= position_d + size_d - 1);
+  occupied_table_6 := (on_a = table & position_a <= 6 & 6 <= position_a + size_a - 1) |
+                      (on_b = table & position_b <= 6 & 6 <= position_b + size_b - 1) |
+                      (on_c = table & position_c <= 6 & 6 <= position_c + size_c - 1) |
+                      (on_d = table & position_d <= 6 & 6 <= position_d + size_d - 1);
+  goal := (on_a = table & position_a = 0) & (on_c = a & position_c = 0) & (on_d = c & position_d = 0) & (on_b = d & position_b = 1); -- Adjust as needed for specific goal
+
+INIT
+  on_a = table & position_a = 2 &
+  on_b = d & position_b = 3 &
+  on_c = table & position_c = 0 &
+  on_d = a & position_d = 2 &
+  level_a = 0 &
+  level_b = 2 &
+  level_c = 0 &
+  level_d = 1;
+
+INVAR
+  !(level_a = level_b & position_a <= position_b + size_b - 1 & position_b <= position_a + size_a - 1) &
+  !(level_a = level_c & position_a <= position_c + size_c - 1 & position_c <= position_a + size_a - 1) &
+  !(level_a = level_d & position_a <= position_d + size_d - 1 & position_d <= position_a + size_a - 1) &
+  !(level_b = level_c & position_b <= position_c + size_c - 1 & position_c <= position_b + size_b - 1) &
+  !(level_b = level_d & position_b <= position_d + size_d - 1 & position_d <= position_b + size_b - 1) &
+  !(level_c = level_d & position_c <= position_d + size_d - 1 & position_d <= position_c + size_c - 1) &
+  position_a + size_a - 1 <= 6 & position_a >= 0 &
+  position_b + size_b - 1 <= 6 & position_b >= 0 &
+  position_c + size_c - 1 <= 6 & position_c >= 0 &
+  position_d + size_d - 1 <= 6 & position_d >= 0 &
+  -- Prevent cycles
+  !(on_a = b & on_b = a) &
+  !(on_a = c & on_c = a) &
+  !(on_a = d & on_d = a) &
+  !(on_b = c & on_c = b) &
+  !(on_b = d & on_d = b) &
+  !(on_c = d & on_d = c) &
+  !(on_a = b & on_b = c & on_c = a) &
+  !(on_a = b & on_b = d & on_d = a) &
+  !(on_a = c & on_c = d & on_d = a) &
+  !(on_b = c & on_c = d & on_d = b) &
+  !(on_a = b & on_b = c & on_c = d & on_d = a) &
+  !(on_a = b & on_b = d & on_d = c & on_c = a) &
+  !(on_a = c & on_c = b & on_b = d & on_d = a) &
+  !(on_a = c & on_c = d & on_d = b & on_b = a) &
+  !(on_a = d & on_d = b & on_b = c & on_c = a) &
+  !(on_a = d & on_d = c & on_c = b & on_b = a);
+
+TRANS
+  next(on_a) = 
+    case
+      move = move_a_to_table_0 & clear_a & !(on_a = table & position_a = 0) & !occupied_table_0 : table;
+      move = move_a_to_table_1 & clear_a & !(on_a = table & position_a = 1) & !occupied_table_1 : table;
+      move = move_a_to_table_2 & clear_a & !(on_a = table & position_a = 2) & !occupied_table_2 : table;
+      move = move_a_to_table_3 & clear_a & !(on_a = table & position_a = 3) & !occupied_table_3 : table;
+      move = move_a_to_table_4 & clear_a & !(on_a = table & position_a = 4) & !occupied_table_4 : table;
+      move = move_a_to_table_5 & clear_a & !(on_a = table & position_a = 5) & !occupied_table_5 : table;
+      move = move_a_to_table_6 & clear_a & !(on_a = table & position_a = 6) & !occupied_table_6 : table;
+      move = move_a_to_b & clear_a & clear_b & on_a != b & (position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) >= 0 & (position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) + size_a - 1 <= 6 & (size_a <= size_b | ((position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 >= position_b & (position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 <= position_b + size_b - 1)) : b;
+      move = move_a_to_c & clear_a & clear_c & on_a != c & (position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) >= 0 & (position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) + size_a - 1 <= 6 & (size_a <= size_c | ((position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 >= position_c & (position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 <= position_c + size_c - 1)) : c;
+      move = move_a_to_d & clear_a & clear_d & on_a != d & (position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) >= 0 & (position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) + size_a - 1 <= 6 & (size_a <= size_d | ((position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 >= position_d & (position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 <= position_d + size_d - 1)) : d;
+      TRUE : on_a;
+    esac;
+
+TRANS
+  next(position_a) = 
+    case
+      move = move_a_to_table_0 & clear_a & !(on_a = table & position_a = 0) & !occupied_table_0 : 0;
+      move = move_a_to_table_1 & clear_a & !(on_a = table & position_a = 1) & !occupied_table_1 : 1;
+      move = move_a_to_table_2 & clear_a & !(on_a = table & position_a = 2) & !occupied_table_2 : 2;
+      move = move_a_to_table_3 & clear_a & !(on_a = table & position_a = 3) & !occupied_table_3 : 3;
+      move = move_a_to_table_4 & clear_a & !(on_a = table & position_a = 4) & !occupied_table_4 : 4;
+      move = move_a_to_table_5 & clear_a & !(on_a = table & position_a = 5) & !occupied_table_5 : 5;
+      move = move_a_to_table_6 & clear_a & !(on_a = table & position_a = 6) & !occupied_table_6 : 6;
+      move = move_a_to_b & clear_a & clear_b & on_a != b & (position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) >= 0 & (position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) + size_a - 1 <= 6 & (size_a <= size_b | ((position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 >= position_b & (position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 <= position_b + size_b - 1)) : position_b + case (size_b - size_a) >= 0 : (size_b - size_a) / 2 ; TRUE : ((size_b - size_a) - 1) / 2 ; esac;
+      move = move_a_to_c & clear_a & clear_c & on_a != c & (position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) >= 0 & (position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) + size_a - 1 <= 6 & (size_a <= size_c | ((position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 >= position_c & (position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 <= position_c + size_c - 1)) : position_c + case (size_c - size_a) >= 0 : (size_c - size_a) / 2 ; TRUE : ((size_c - size_a) - 1) / 2 ; esac;
+      move = move_a_to_d & clear_a & clear_d & on_a != d & (position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) >= 0 & (position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) + size_a - 1 <= 6 & (size_a <= size_d | ((position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 >= position_d & (position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac) + (size_a - 1) / 2 <= position_d + size_d - 1)) : position_d + case (size_d - size_a) >= 0 : (size_d - size_a) / 2 ; TRUE : ((size_d - size_a) - 1) / 2 ; esac;
+      TRUE : position_a;
+    esac;
+
+TRANS
+  next(on_b) = 
+    case
+      move = move_b_to_table_0 & clear_b & !(on_b = table & position_b = 0) & !occupied_table_0 : table;
+      move = move_b_to_table_1 & clear_b & !(on_b = table & position_b = 1) & !occupied_table_1 : table;
+      move = move_b_to_table_2 & clear_b & !(on_b = table & position_b = 2) & !occupied_table_2 : table;
+      move = move_b_to_table_3 & clear_b & !(on_b = table & position_b = 3) & !occupied_table_3 : table;
+      move = move_b_to_table_4 & clear_b & !(on_b = table & position_b = 4) & !occupied_table_4 : table;
+      move = move_b_to_table_5 & clear_b & !(on_b = table & position_b = 5) & !occupied_table_5 : table;
+      move = move_b_to_table_6 & clear_b & !(on_b = table & position_b = 6) & !occupied_table_6 : table;
+      move = move_b_to_a & clear_b & clear_a & on_b != a & (position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) >= 0 & (position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) + size_b - 1 <= 6 & (size_b <= size_a | ((position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 >= position_a & (position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 <= position_a + size_a - 1)) : a;
+      move = move_b_to_c & clear_b & clear_c & on_b != c & (position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) >= 0 & (position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) + size_b - 1 <= 6 & (size_b <= size_c | ((position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 >= position_c & (position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 <= position_c + size_c - 1)) : c;
+      move = move_b_to_d & clear_b & clear_d & on_b != d & (position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) >= 0 & (position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) + size_b - 1 <= 6 & (size_b <= size_d | ((position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 >= position_d & (position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 <= position_d + size_d - 1)) : d;
+      TRUE : on_b;
+    esac;
+
+TRANS
+  next(position_b) = 
+    case
+      move = move_b_to_table_0 & clear_b & !(on_b = table & position_b = 0) & !occupied_table_0 : 0;
+      move = move_b_to_table_1 & clear_b & !(on_b = table & position_b = 1) & !occupied_table_1 : 1;
+      move = move_b_to_table_2 & clear_b & !(on_b = table & position_b = 2) & !occupied_table_2 : 2;
+      move = move_b_to_table_3 & clear_b & !(on_b = table & position_b = 3) & !occupied_table_3 : 3;
+      move = move_b_to_table_4 & clear_b & !(on_b = table & position_b = 4) & !occupied_table_4 : 4;
+      move = move_b_to_table_5 & clear_b & !(on_b = table & position_b = 5) & !occupied_table_5 : 5;
+      move = move_b_to_table_6 & clear_b & !(on_b = table & position_b = 6) & !occupied_table_6 : 6;
+      move = move_b_to_a & clear_b & clear_a & on_b != a & (position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) >= 0 & (position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) + size_b - 1 <= 6 & (size_b <= size_a | ((position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 >= position_a & (position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 <= position_a + size_a - 1)) : position_a + case (size_a - size_b) >= 0 : (size_a - size_b) / 2 ; TRUE : ((size_a - size_b) - 1) / 2 ; esac;
+      move = move_b_to_c & clear_b & clear_c & on_b != c & (position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) >= 0 & (position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) + size_b - 1 <= 6 & (size_b <= size_c | ((position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 >= position_c & (position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 <= position_c + size_c - 1)) : position_c + case (size_c - size_b) >= 0 : (size_c - size_b) / 2 ; TRUE : ((size_c - size_b) - 1) / 2 ; esac;
+      move = move_b_to_d & clear_b & clear_d & on_b != d & (position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) >= 0 & (position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) + size_b - 1 <= 6 & (size_b <= size_d | ((position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 >= position_d & (position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac) + (size_b - 1) / 2 <= position_d + size_d - 1)) : position_d + case (size_d - size_b) >= 0 : (size_d - size_b) / 2 ; TRUE : ((size_d - size_b) - 1) / 2 ; esac;
+      TRUE : position_b;
+    esac;
+
+TRANS
+  next(on_c) = 
+    case
+      move = move_c_to_table_0 & clear_c & !(on_c = table & position_c = 0) & !occupied_table_0 : table;
+      move = move_c_to_table_1 & clear_c & !(on_c = table & position_c = 1) & !occupied_table_1 : table;
+      move = move_c_to_table_2 & clear_c & !(on_c = table & position_c = 2) & !occupied_table_2 : table;
+      move = move_c_to_table_3 & clear_c & !(on_c = table & position_c = 3) & !occupied_table_3 : table;
+      move = move_c_to_table_4 & clear_c & !(on_c = table & position_c = 4) & !occupied_table_4 : table;
+      move = move_c_to_table_5 & clear_c & !(on_c = table & position_c = 5) & !occupied_table_5 : table;
+      move = move_c_to_table_6 & clear_c & !(on_c = table & position_c = 6) & !occupied_table_6 : table;
+      move = move_c_to_a & clear_c & clear_a & on_c != a & (position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) >= 0 & (position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) + size_c - 1 <= 6 & (size_c <= size_a | ((position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 >= position_a & (position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 <= position_a + size_a - 1)) : a;
+      move = move_c_to_b & clear_c & clear_b & on_c != b & (position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) >= 0 & (position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) + size_c - 1 <= 6 & (size_c <= size_b | ((position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 >= position_b & (position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 <= position_b + size_b - 1)) : b;
+      move = move_c_to_d & clear_c & clear_d & on_c != d & (position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) >= 0 & (position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) + size_c - 1 <= 6 & (size_c <= size_d | ((position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 >= position_d & (position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 <= position_d + size_d - 1)) : d;
+      TRUE : on_c;
+    esac;
+
+TRANS
+  next(position_c) = 
+    case
+      move = move_c_to_table_0 & clear_c & !(on_c = table & position_c = 0) & !occupied_table_0 : 0;
+      move = move_c_to_table_1 & clear_c & !(on_c = table & position_c = 1) & !occupied_table_1 : 1;
+      move = move_c_to_table_2 & clear_c & !(on_c = table & position_c = 2) & !occupied_table_2 : 2;
+      move = move_c_to_table_3 & clear_c & !(on_c = table & position_c = 3) & !occupied_table_3 : 3;
+      move = move_c_to_table_4 & clear_c & !(on_c = table & position_c = 4) & !occupied_table_4 : 4;
+      move = move_c_to_table_5 & clear_c & !(on_c = table & position_c = 5) & !occupied_table_5 : 5;
+      move = move_c_to_table_6 & clear_c & !(on_c = table & position_c = 6) & !occupied_table_6 : 6;
+      move = move_c_to_a & clear_c & clear_a & on_c != a & (position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) >= 0 & (position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) + size_c - 1 <= 6 & (size_c <= size_a | ((position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 >= position_a & (position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 <= position_a + size_a - 1)) : position_a + case (size_a - size_c) >= 0 : (size_a - size_c) / 2 ; TRUE : ((size_a - size_c) - 1) / 2 ; esac;
+      move = move_c_to_b & clear_c & clear_b & on_c != b & (position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) >= 0 & (position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) + size_c - 1 <= 6 & (size_c <= size_b | ((position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 >= position_b & (position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 <= position_b + size_b - 1)) : position_b + case (size_b - size_c) >= 0 : (size_b - size_c) / 2 ; TRUE : ((size_b - size_c) - 1) / 2 ; esac;
+      move = move_c_to_d & clear_c & clear_d & on_c != d & (position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) >= 0 & (position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) + size_c - 1 <= 6 & (size_c <= size_d | ((position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 >= position_d & (position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac) + (size_c - 1) / 2 <= position_d + size_d - 1)) : position_d + case (size_d - size_c) >= 0 : (size_d - size_c) / 2 ; TRUE : ((size_d - size_c) - 1) / 2 ; esac;
+      TRUE : position_c;
+    esac;
+
+TRANS
+  next(on_d) = 
+    case
+      move = move_d_to_table_0 & clear_d & !(on_d = table & position_d = 0) & !occupied_table_0 & !occupied_table_1 : table;
+      move = move_d_to_table_1 & clear_d & !(on_d = table & position_d = 1) & !occupied_table_1 & !occupied_table_2 : table;
+      move = move_d_to_table_2 & clear_d & !(on_d = table & position_d = 2) & !occupied_table_2 & !occupied_table_3 : table;
+      move = move_d_to_table_3 & clear_d & !(on_d = table & position_d = 3) & !occupied_table_3 & !occupied_table_4 : table;
+      move = move_d_to_table_4 & clear_d & !(on_d = table & position_d = 4) & !occupied_table_4 & !occupied_table_5 : table;
+      move = move_d_to_table_5 & clear_d & !(on_d = table & position_d = 5) & !occupied_table_5 & !occupied_table_6 : table;
+      move = move_d_to_table_6 & clear_d & !(on_d = table & position_d = 6) & FALSE : table;
+      move = move_d_to_a & clear_d & clear_a & on_d != a & (position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) >= 0 & (position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) + size_d - 1 <= 6 & (size_d <= size_a | ((position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 >= position_a & (position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 <= position_a + size_a - 1)) : a;
+      move = move_d_to_b & clear_d & clear_b & on_d != b & (position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) >= 0 & (position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) + size_d - 1 <= 6 & (size_d <= size_b | ((position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 >= position_b & (position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 <= position_b + size_b - 1)) : b;
+      move = move_d_to_c & clear_d & clear_c & on_d != c & (position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) >= 0 & (position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) + size_d - 1 <= 6 & (size_d <= size_c | ((position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 >= position_c & (position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 <= position_c + size_c - 1)) : c;
+      TRUE : on_d;
+    esac;
+
+TRANS
+  next(position_d) = 
+    case
+      move = move_d_to_table_0 & clear_d & !(on_d = table & position_d = 0) & !occupied_table_0 & !occupied_table_1 : 0;
+      move = move_d_to_table_1 & clear_d & !(on_d = table & position_d = 1) & !occupied_table_1 & !occupied_table_2 : 1;
+      move = move_d_to_table_2 & clear_d & !(on_d = table & position_d = 2) & !occupied_table_2 & !occupied_table_3 : 2;
+      move = move_d_to_table_3 & clear_d & !(on_d = table & position_d = 3) & !occupied_table_3 & !occupied_table_4 : 3;
+      move = move_d_to_table_4 & clear_d & !(on_d = table & position_d = 4) & !occupied_table_4 & !occupied_table_5 : 4;
+      move = move_d_to_table_5 & clear_d & !(on_d = table & position_d = 5) & !occupied_table_5 & !occupied_table_6 : 5;
+      move = move_d_to_table_6 & clear_d & !(on_d = table & position_d = 6) & FALSE : 6;
+      move = move_d_to_a & clear_d & clear_a & on_d != a & (position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) >= 0 & (position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) + size_d - 1 <= 6 & (size_d <= size_a | ((position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 >= position_a & (position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 <= position_a + size_a - 1)) : position_a + case (size_a - size_d) >= 0 : (size_a - size_d) / 2 ; TRUE : ((size_a - size_d) - 1) / 2 ; esac;
+      move = move_d_to_b & clear_d & clear_b & on_d != b & (position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) >= 0 & (position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) + size_d - 1 <= 6 & (size_d <= size_b | ((position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 >= position_b & (position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 <= position_b + size_b - 1)) : position_b + case (size_b - size_d) >= 0 : (size_b - size_d) / 2 ; TRUE : ((size_b - size_d) - 1) / 2 ; esac;
+      move = move_d_to_c & clear_d & clear_c & on_d != c & (position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) >= 0 & (position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) + size_d - 1 <= 6 & (size_d <= size_c | ((position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 >= position_c & (position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac) + (size_d - 1) / 2 <= position_c + size_c - 1)) : position_c + case (size_c - size_d) >= 0 : (size_c - size_d) / 2 ; TRUE : ((size_c - size_d) - 1) / 2 ; esac;
+      TRUE : position_d;
+    esac;
+
+ASSIGN
+  next(level_a) := case next(on_a) != on_a : case next(on_a) = table : 0;
+                                               next(on_a) = b : min(level_b + 1, 10);
+                                               next(on_a) = c : min(level_c + 1, 10);
+                                               next(on_a) = d : min(level_d + 1, 10);
+                                               TRUE : level_a;
+                                           esac;
+                    TRUE : level_a;
+                   esac;
+  next(level_b) := case next(on_b) != on_b : case next(on_b) = table : 0;
+                                               next(on_b) = a : min(level_a + 1, 10);
+                                               next(on_b) = c : min(level_c + 1, 10);
+                                               next(on_b) = d : min(level_d + 1, 10);
+                                               TRUE : level_b;
+                                           esac;
+                    TRUE : level_b;
+                   esac;
+  next(level_c) := case next(on_c) != on_c : case next(on_c) = table : 0;
+                                               next(on_c) = a : min(level_a + 1, 10);
+                                               next(on_c) = b : min(level_b + 1, 10);
+                                               next(on_c) = d : min(level_d + 1, 10);
+                                               TRUE : level_c;
+                                           esac;
+                    TRUE : level_c;
+                   esac;
+  next(level_d) := case next(on_d) != on_d : case next(on_d) = table : 0;
+                                               next(on_d) = a : min(level_a + 1, 10);
+                                               next(on_d) = b : min(level_b + 1, 10);
+                                               next(on_d) = c : min(level_c + 1, 10);
+                                               TRUE : level_d;
+                                           esac;
+                    TRUE : level_d;
+                   esac;
+				   
+TRANS
+  (move != none) -> (next(on_a) != on_a | next(position_a) != position_a | next(on_b) != on_b | next(position_b) != position_b | next(on_c) != on_c | next(position_c) != position_c | next(on_d) != on_d | next(position_d) != position_d);
+
+CTLSPEC !EF goal;
