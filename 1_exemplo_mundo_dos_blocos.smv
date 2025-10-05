@@ -1,0 +1,71 @@
+MODULE main
+
+VAR
+  on_a : {table1, table2, table3, table4, b, c};
+  on_b : {table1, table2, table3, table4, a, c};
+  on_c : {table1, table2, table3, table4, a, b};
+  move : {none,
+          move_a_table1, move_a_table2, move_a_table3, move_a_table4, move_a_b, move_a_c,
+          move_b_table1, move_b_table2, move_b_table3, move_b_table4, move_b_a, move_b_c,
+          move_c_table1, move_c_table2, move_c_table3, move_c_table4, move_c_a, move_c_b};
+
+DEFINE
+  clear_a := (on_b != a) & (on_c != a);
+  clear_b := (on_a != b) & (on_c != b);
+  clear_c := (on_a != c) & (on_b != c);
+  clear_table1 := (on_a != table1) & (on_b != table1) & (on_c != table1);
+  clear_table2 := (on_a != table2) & (on_b != table2) & (on_c != table2);
+  clear_table3 := (on_a != table3) & (on_b != table3) & (on_c != table3);
+  clear_table4 := (on_a != table4) & (on_b != table4) & (on_c != table4);
+  goal := (on_a = table1) & (on_b = a) & (on_c = b);
+
+INIT
+  on_a = table1 &
+  on_b = table3 &
+  on_c = a;
+
+-- Transições para on_a (padrão para outros blocos)
+TRANS
+  next(on_a) =
+    case
+      move = move_a_table1 & clear_a & clear_table1 & on_a != table1 : table1;
+      move = move_a_table2 & clear_a & clear_table2 & on_a != table2 : table2;
+      move = move_a_table3 & clear_a & clear_table3 & on_a != table3 : table3;
+      move = move_a_table4 & clear_a & clear_table4 & on_a != table4 : table4;
+      move = move_a_b & clear_a & clear_b & on_a != b : b;
+      move = move_a_c & clear_a & clear_c & on_a != c : c;
+      TRUE : on_a;
+    esac;
+
+-- Transições para on_b (similar)
+TRANS
+  next(on_b) =
+    case
+      move = move_b_table1 & clear_b & clear_table1 & on_b != table1 : table1;
+      move = move_b_table2 & clear_b & clear_table2 & on_b != table2 : table2;
+      move = move_b_table3 & clear_b & clear_table3 & on_b != table3 : table3;
+      move = move_b_table4 & clear_b & clear_table4 & on_b != table4 : table4;
+      move = move_b_a & clear_b & clear_a & on_b != a : a;
+      move = move_b_c & clear_b & clear_c & on_b != c : c;
+      TRUE : on_b;
+    esac;
+
+-- Transições para on_c (similar)
+TRANS
+  next(on_c) =
+    case
+      move = move_c_table1 & clear_c & clear_table1 & on_c != table1 : table1;
+      move = move_c_table2 & clear_c & clear_table2 & on_c != table2 : table2;
+      move = move_c_table3 & clear_c & clear_table3 & on_c != table3 : table3;
+      move = move_c_table4 & clear_c & clear_table4 & on_c != table4 : table4;
+      move = move_c_a & clear_c & clear_a & on_c != a : a;
+      move = move_c_b & clear_c & clear_b & on_c != b : b;
+      TRUE : on_c;
+    esac;
+
+-- Garante mudança em algum on se move != none
+TRANS
+  (move != none) -> (next(on_a) != on_a | next(on_b) != on_b | next(on_c) != on_c);
+
+-- Propriedade: objetivo é alcançável?
+CTLSPEC EF goal;
