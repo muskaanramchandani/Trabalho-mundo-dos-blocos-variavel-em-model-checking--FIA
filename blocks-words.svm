@@ -266,4 +266,4 @@ ASSIGN
 TRANS
   (move != none) -> (next(on_a) != on_a | next(position_a) != position_a | next(on_b) != on_b | next(position_b) != position_b | next(on_c) != on_c | next(position_c) != position_c | next(on_d) != on_d | next(position_d) != position_d);
 
-CTLSPEC !EF goal;
+CTLSPEC EF goal;
